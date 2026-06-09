@@ -19,12 +19,13 @@ Funzionalità:
 Zero chiamate di rete.
 """
 
+from __future__ import annotations
+
 import csv
 import io
 import os
 import warnings
 from dataclasses import dataclass, field
-from typing import Optional
 
 import pandas as pd
 
@@ -238,7 +239,7 @@ def carica_csv(percorso: str) -> DatasetCaricato:
 # CARICAMENTO EXCEL
 # =============================================================================
 
-def carica_excel(percorso: str, nome_foglio: Optional[str] = None) -> DatasetCaricato:
+def carica_excel(percorso: str, nome_foglio: str | None = None) -> DatasetCaricato:
     """
     Carica un file Excel (.xlsx/.xls/.xlsm).
     Se nome_foglio è None, usa il primo foglio non vuoto.

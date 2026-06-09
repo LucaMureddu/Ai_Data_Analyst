@@ -12,6 +12,8 @@ per llama-cpp-python (n_gpu_layers, n_ctx, n_threads).
 Zero chiamate di rete. Zero dipendenze esterne oltre psutil.
 """
 
+from __future__ import annotations
+
 import platform
 import struct
 import subprocess

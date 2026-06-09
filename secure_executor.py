@@ -35,6 +35,8 @@ Perché non c'è più il custom __import__:
 Zero chiamate di rete. Zero dipendenze esterne oltre pandas/numpy/matplotlib.
 """
 
+from __future__ import annotations
+
 import ast
 import contextlib
 import io
