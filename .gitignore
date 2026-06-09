@@ -1,0 +1,23 @@
+# ── Modelli AI (troppo grandi per git) ───────────────────────────────────────
+*.gguf
+models/
+
+# ── Artefatti build PyInstaller ───────────────────────────────────────────────
+build/
+dist/
+distribuzione/
+
+# ── Output runtime dell'app ───────────────────────────────────────────────────
+output/
+.dw_history.json
+.dw_toured
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# ── macOS ────────────────────────────────────────────────────────────────────
+.DS_Store

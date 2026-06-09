@@ -1,0 +1,23 @@
+1. VISIONE GLOBALE E PERIMETRO DEL PROGETTO 
+
+Il progetto "Data-Whisperer" fa parte di un ecosistema di Intelligenza Artificiale locale (Edge AI) distribuito esclusivamente su unità fisiche SSD NVMe portatili ultra-veloci. Il target è composto da professionisti in settori regolamentati: direttori finanziari (CFO), commercialisti, analisti di business e responsabili HR. L'obiettivo assoluto è garantire la sovranità, la riservatezza e la sicurezza dei dati: l'esecuzione dei modelli deve avvenire interamente offline, azzerando i rischi di data breach ed eliminando i costi di infrastruttura cloud aziendale.
+
+2. FUNZIONALITÀ CORE DATA-WHISPERER Data-Whisperer funge da "Analista Finanziario da Scrivania".
+
+* Input: File CSV ed Excel contenenti bilanci, stipendi o dati operativi forniti dall'utente. 
+* Interazione: L'utente chiede un'analisi tramite linguaggio naturale (es. "Mostrami il trend dei costi operativi dell'ultimo trimestre"). 
+* Elaborazione: Il motore logico AI traduce la richiesta in codice Python, esegue il codice localmente sui dati forniti ed elabora il risultato, che può includere la generazione di grafici, l'individuazione di anomalie o reportistica predittiva. 
+
+3. VINCOLI ARCHITETTURALI E TECNICI (TASSATIVI)
+
+Qualsiasi codice generato per questo progetto deve rispettare rigorosamente le seguenti direttive:
+
+* Isolamento "Air-Gapped": Il codice NON deve contenere alcuna funzione di chiamata di rete o API esterne (no OpenAI, no Anthropic API, no chiamate web). Il sistema deve funzionare con la scheda di rete del computer ospite fisicamente disabilitata. 
+* Modello AI e Formato: Il sistema utilizza esclusivamente Modelli Open-Source ad alte prestazioni (es. Llama 3 8B o Mistral 7B) convertiti in formato GGUF e quantizzati a 4 o 5 bit. 
+* Motore di Inferenza: L'esecuzione deve basarsi su llama.cpp e i suoi binding per Python (llama-cpp-python). Il motore deve essere configurato per sfruttare l'accelerazione hardware locale (Metal/MPS per Apple Silicon M4 Pro), ma l'architettura di base deve permettere di far girare il modello sfruttando unicamente la CPU per garantire retrocompatibilità con computer da ufficio standard. 
+* Gestione Risorse (RAM): Il sistema deve essere altamente ottimizzato. L'allocazione della RAM per il modello quantizzato deve rimanere confinata in una porzione minima (circa 5-6 GB). Lo sviluppo futuro prevederà uno script di controllo hardware per calibrare l'allocazione delle risorse all'avvio. 
+* Esecuzione Sicura del Codice: Poiché il modello genererà codice Python (usando librerie standard di data science come pandas, matplotlib, ecc.) in base al prompt, l'architettura deve prevedere un metodo per isolare ed eseguire questo codice in locale in modo robusto e sicuro, restituendo l'output o i grafici.
+
+4. OBIETTIVO DEL PROMPT
+
+Ogni volta che ti viene richiesto di generare codice, progettare moduli o fare debug, devi assicurarti che la soluzione proposta non violi mai i punti 1 e 3. L'ecosistema deve rimanere 100% plug-and-play, offline e focalizzato sulla generazione/esecuzione di codice locale per l'analisi dati.
