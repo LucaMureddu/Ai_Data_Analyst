@@ -1,5 +1,7 @@
 # Data-Whisperer
 
+[![CI](https://github.com/LucaMureddu/Ai_Data_Analyst/actions/workflows/ci.yml/badge.svg)](https://github.com/LucaMureddu/Ai_Data_Analyst/actions/workflows/ci.yml)
+
 **Analista dati AI completamente offline — doppio click, nessuna installazione, zero rete.**
 
 Data-Whisperer è un'applicazione desktop che porta l'intelligenza artificiale nell'analisi di file CSV ed Excel senza richiedere connessione a internet, account cloud o competenze tecniche. Gira interamente sul computer dell'utente: i dati non lasciano mai la macchina.
@@ -140,20 +142,26 @@ python app_ui.py
 
 ## Test
 
-La test suite copre i moduli core senza richiedere un modello LLM caricato in RAM. `llama_cpp` viene mockato automaticamente da `tests/conftest.py`.
+La test suite conta **73 test** e copre i moduli core senza richiedere un modello LLM caricato in RAM. `llama_cpp` viene mockato automaticamente da `tests/conftest.py`.
 
 ### Eseguire i test
 
 ```bash
-pip install pytest pytest-cov
-pytest tests/ -v
+pip install pytest pytest-cov "coverage[toml]"
+pytest                                    # opzioni -v e --tb=short già in pyproject.toml
+pytest --cov=. --cov-report=term-missing  # con coverage report
 ```
 
-### Copertura
+### Copertura per modulo
 
-```bash
-pytest tests/ --cov=. --cov-omit="venv/*,tests/*,build_script.py" --cov-report=term-missing
-```
+| Modulo | Copertura | Note |
+|---|---|---|
+| `prompts.py` | 100% | Tutti i 7 system prompt verificati |
+| `data_loader.py` | 71% | Parsing CSV/Excel, auto-detection encoding |
+| `secure_executor.py` | 71% | AST, socket blacklist, timeout, grafici PNG |
+| `core_engine.py` | 29% | Funzioni utility (`_pulisci_codice`, `trova_modelli`, `_app_data_dir`) |
+| `dw_logger.py` | 77% | Logger rotante |
+| `hardware_detector.py` | 25% | Rilevamento hardware (richiede GPU fisica) |
 
 ### Moduli coperti
 
@@ -162,14 +170,14 @@ pytest tests/ --cov=. --cov-omit="venv/*,tests/*,build_script.py" --cov-report=t
 | `test_secure_executor.py` | Esecuzione codice valido, blocco AST (import vietati, `__import__`, `importlib`), context manager `_blocca_socket`, timeout loop infinito, cattura grafici PNG |
 | `test_core_engine_utils.py` | `_pulisci_codice` (markdown, `plt.show()`, commenti, righe vuote), `trova_modelli` (scan, ordinamento, edge case), `_app_data_dir` |
 | `test_data_loader.py` | `_pulisci_colonne`, `_converti_date`, auto-detection separatore, caricamento CSV/Excel reali |
-| `test_prompts.py` | Presenza e contenuto dei 7 system prompt: keyword chiave, lunghezza minima, assenza di artefatti |
+| `test_prompts.py` | Presenza e contenuto dei 7 system prompt: keyword chiave, lunghezza minima, assenza di artefatti markdown |
 
 ### CI/CD
 
-Ogni push su `main` e ogni pull request eseguono automaticamente lint e test via **GitHub Actions** (`.github/workflows/ci.yml`):
+Ogni push su `main` e ogni pull request eseguono automaticamente lint e test via **GitHub Actions** (`.github/workflows/ci.yml`). La configurazione ruff e pytest vive in `pyproject.toml`.
 
-- **Lint:** `ruff` (regole E, F, W, I — escluso E501)
-- **Test:** `pytest` con coverage report
+- **Lint:** `ruff` (regole E, F, W, I — escluso E501, E402, I001)
+- **Test:** `pytest` con coverage report (`pytest-cov` + `coverage[toml]`)
 
 ---
 
