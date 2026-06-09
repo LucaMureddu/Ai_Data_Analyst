@@ -42,4 +42,6 @@ jobs:
           ruff check .
 
       - name: Run tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: pytest --cov=. --cov-report=term-missing
