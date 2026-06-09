@@ -13,13 +13,15 @@ Data-Whisperer è un'applicazione desktop che porta l'intelligenza artificiale n
 3. [Requisiti di sistema](#requisiti-di-sistema)
 4. [Modelli AI supportati](#modelli-ai-supportati)
 5. [Installazione in sviluppo](#installazione-in-sviluppo)
-6. [Struttura del progetto](#struttura-del-progetto)
-7. [Architettura tecnica](#architettura-tecnica)
-8. [Pipeline multi-agente](#pipeline-multi-agente)
-9. [Sicurezza a tre livelli](#sicurezza-a-tre-livelli)
-10. [Rilevamento hardware automatico](#rilevamento-hardware-automatico)
-11. [Build e distribuzione](#build-e-distribuzione)
-12. [Formato dei file supportati](#formato-dei-file-supportati)
+6. [Test](#test)
+7. [Struttura del progetto](#struttura-del-progetto)
+8. [Architettura tecnica](#architettura-tecnica)
+9. [Pipeline multi-agente](#pipeline-multi-agente)
+10. [Sicurezza a tre livelli](#sicurezza-a-tre-livelli)
+11. [Rilevamento hardware automatico](#rilevamento-hardware-automatico)
+12. [Build e distribuzione](#build-e-distribuzione)
+13. [Formato dei file supportati](#formato-dei-file-supportati)
+14. [Dipendenze principali](#dipendenze-principali)
 
 ---
 
@@ -87,7 +89,7 @@ I file `.gguf` vanno posizionati nella cartella `models/` in sviluppo, oppure ac
 ### 1. Clona il repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/LucaMureddu/Ai_Data_Analyst.git
 cd ai_data_analyst
 ```
 
@@ -136,6 +138,41 @@ python app_ui.py
 
 ---
 
+## Test
+
+La test suite copre i moduli core senza richiedere un modello LLM caricato in RAM. `llama_cpp` viene mockato automaticamente da `tests/conftest.py`.
+
+### Eseguire i test
+
+```bash
+pip install pytest pytest-cov
+pytest tests/ -v
+```
+
+### Copertura
+
+```bash
+pytest tests/ --cov=. --cov-omit="venv/*,tests/*,build_script.py" --cov-report=term-missing
+```
+
+### Moduli coperti
+
+| File di test | Cosa verifica |
+|---|---|
+| `test_secure_executor.py` | Esecuzione codice valido, blocco AST (import vietati, `__import__`, `importlib`), context manager `_blocca_socket`, timeout loop infinito, cattura grafici PNG |
+| `test_core_engine_utils.py` | `_pulisci_codice` (markdown, `plt.show()`, commenti, righe vuote), `trova_modelli` (scan, ordinamento, edge case), `_app_data_dir` |
+| `test_data_loader.py` | `_pulisci_colonne`, `_converti_date`, auto-detection separatore, caricamento CSV/Excel reali |
+| `test_prompts.py` | Presenza e contenuto dei 7 system prompt: keyword chiave, lunghezza minima, assenza di artefatti |
+
+### CI/CD
+
+Ogni push su `main` e ogni pull request eseguono automaticamente lint e test via **GitHub Actions** (`.github/workflows/ci.yml`):
+
+- **Lint:** `ruff` (regole E, F, W, I — escluso E501)
+- **Test:** `pytest` con coverage report
+
+---
+
 ## Struttura del progetto
 
 ```
@@ -143,8 +180,8 @@ ai_data_analyst/
 │
 ├── app_ui.py               # Entry point — coordinatore principale (DataWhispererApp)
 │
-├── core_engine.py          # Pipeline multi-agente: Vigile → Validatore → Architetto
-│                           #   → Dattilografo → Ispettore + Concierge + Stilista
+├── core_engine.py          # Orchestrazione pipeline a 7 agenti + path helper
+├── prompts.py              # System prompt dei 7 micro-agenti (separati dalla logica)
 ├── secure_executor.py      # Esecutore sicuro a 3 livelli (AST + socket + timeout)
 ├── data_loader.py          # Caricamento CSV/Excel con auto-detection encoding/separatore
 ├── hardware_detector.py    # Rilevamento hardware e calibrazione parametri LLM
@@ -161,12 +198,18 @@ ai_data_analyst/
 ├── models/                 # File .gguf (esclusi da git)
 ├── output/                 # PNG generati a runtime (esclusi da git)
 ├── scripts/                # Script di utilità (es. crea_dataset.py)
-├── tests/                  # Dati di test (CSV, Excel)
+├── tests/                  # Test suite pytest + dati di test (CSV, Excel)
+│   ├── conftest.py         # Mock llama_cpp per esecuzione in CI senza GPU
+│   ├── test_secure_executor.py
+│   ├── test_core_engine_utils.py
+│   ├── test_data_loader.py
+│   └── test_prompts.py
 ├── docs/                   # Documentazione di progetto
 │
+├── .github/workflows/ci.yml  # GitHub Actions: lint + test su ogni push/PR
 ├── Data-Whisperer.spec     # Configurazione build PyInstaller
 ├── build_script.py         # Script di automazione build .app
-├── requirements.txt        # Dipendenze Python
+├── requirements.txt        # Dipendenze Python con versioni pinnate
 └── .gitignore
 ```
 
@@ -175,11 +218,12 @@ ai_data_analyst/
 | File | Responsabilità |
 |---|---|
 | `app_ui.py` | Inizializzazione, stato dell'app, caricamento modello/file, drag & drop, onboarding, query suggerite |
-| `core_engine.py` | Orchestrazione pipeline AI, system prompt dei 7 agenti, path helper (`_APP_ROOT`, `_app_data_dir`) |
+| `core_engine.py` | Orchestrazione pipeline AI, routing tra agenti, path helper (`_APP_ROOT`, `_app_data_dir`) |
+| `prompts.py` | System prompt dei 7 agenti — versionabili e testabili indipendentemente dal motore |
 | `secure_executor.py` | Esecuzione sandbox del codice Python generato dall'AI, formato numeri locale |
 | `data_loader.py` | Parsing CSV/Excel, normalizzazione colonne, schema per il prompt, lista fogli Excel |
 | `hardware_detector.py` | Calibrazione automatica GPU layers, contesto e thread |
-| `dw_logger.py` | Logger rotante su file in App Support; usato da `app_ui.py` per filtrare stdout/stderr |
+| `dw_logger.py` | Logger rotante su file in App Support; usato da tutti i moduli core |
 
 ---
 
@@ -197,6 +241,10 @@ class DataWhispererApp(LayoutMixin, ChatMixin, SidebarMixin, DnDWrapper, ctk.CTk
 `DnDWrapper` (da `tkinterdnd2`) è aggiunto come mixin senza sostituire `ctk.CTk`: `TkinterDnD._require(self)` carica il pacchetto Tcl `tkdnd` nella finestra CTk esistente, preservando il tema dark. Se `tkinterdnd2` non è installato, `DnDWrapper` viene sostituito con `object` e il drag & drop è semplicemente disabilitato.
 
 Ogni mixin accede agli attributi di stato (`self._chat`, `self._busy`, `self._dataset`, ecc.) inizializzati in `DataWhispererApp.__init__`. I moduli UI non si importano a vicenda: il coordinatore (`app_ui.py`) è l'unico punto di composizione.
+
+### Separazione prompt / logica
+
+I system prompt dei 7 agenti vivono in `prompts.py`, separati dall'orchestratore `core_engine.py`. Questo permette di modificare il comportamento di un agente senza toccare la logica di routing, e rende i prompt testabili in isolamento (vedi `test_prompts.py`).
 
 ### Gestione percorsi: dev vs produzione
 
@@ -267,7 +315,7 @@ Richiesta utente
 
 **A2 — Architetto:** produce un piano logico numerato (max 6 step) senza scrivere codice. Distingue query temporali (→ `AnnoMese`, `.dt.year`) da query categoriali (→ `groupby` diretto). Include una guardia che rimuove `AnnoMese` dal piano se la query non contiene parole temporali.
 
-**A3 — Dattilografo:** traduce il piano in codice Python tramite few-shot learning (5 esempi nel system prompt). Temperatura 0.05: copia la sintassi degli esempi, non inventa.
+**A3 — Dattilografo:** traduce il piano in codice Python tramite few-shot learning (8 esempi nel system prompt). Temperatura 0.05: copia la sintassi degli esempi, non inventa.
 
 **A4 — Ispettore:** esegue il codice via `esegui_sicuro()`. Se fallisce, passa il traceback all'agente e richiede una correzione. Mantiene la cronologia dei tentativi: l'ispettore vede i propri errori passati. Loop: max 3 cicli QA.
 
@@ -387,14 +435,15 @@ Le colonne completamente vuote vengono rimosse automaticamente. Le colonne con n
 
 | Libreria | Versione | Uso |
 |---|---|---|
-| `customtkinter` | ≥ 5.2 | UI desktop cross-platform |
-| `tkinterdnd2` | ≥ 0.3 | Drag & drop file (opzionale, degrada gracefully) |
+| `customtkinter` | ≥ 5.2.2 | UI desktop cross-platform |
+| `tkinterdnd2` | ≥ 0.3.0 | Drag & drop file (opzionale, degrada gracefully) |
 | `llama-cpp-python` | ≥ 0.2 | Inferenza GGUF locale |
-| `pandas` | ≥ 2.0 | Manipolazione dati |
-| `matplotlib` | ≥ 3.8 | Generazione grafici |
-| `Pillow` | ≥ 10.0 | Rendering immagini nella UI e miniature cronologia |
-| `psutil` | ≥ 5.9 | Rilevamento RAM e CPU |
-| `openpyxl` | ≥ 3.1 | Lettura file Excel e generazione XLSX di export |
-| `chardet` | ≥ 5.0 | Auto-detection encoding CSV |
-| `fpdf2` | ≥ 2.7 | Esportazione PDF sessione |
-| `pyinstaller` | ≥ 6.0 | Build applicazione nativa |
+| `pandas` | ≥ 2.0.0 | Manipolazione dati |
+| `numpy` | ≥ 1.26.0 | Calcolo numerico |
+| `matplotlib` | ≥ 3.8.0 | Generazione grafici |
+| `Pillow` | ≥ 10.0.0 | Rendering immagini nella UI e miniature cronologia |
+| `psutil` | ≥ 5.9.0 | Rilevamento RAM e CPU |
+| `openpyxl` | ≥ 3.1.0 | Lettura file Excel e generazione XLSX di export |
+| `chardet` | ≥ 5.0.0 | Auto-detection encoding CSV |
+| `fpdf2` | ≥ 2.7.9 | Esportazione PDF sessione |
+| `pyinstaller` | ≥ 6.0.0 | Build applicazione nativa |
