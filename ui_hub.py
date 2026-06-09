@@ -7,11 +7,11 @@ import customtkinter as ctk
 from ui_constants import (
     BG_MAIN, SIDEBAR_BG, AI_BG, ACCENT, ACCENT_DIM, ACCENT_HOV,
     TEXT_PRI, TEXT_SEC, TEXT_ERR,
-    BORDER, BTN_IDLE, BTN_HOV,
-    FONT_SMALL, FONT_MICRO, FONT_BADGE,
+    BORDER, BTN_IDLE,
+    FONT_SMALL, FONT_MICRO,
     _font, _OS,
 )
-from core_engine import trova_modelli, _APP_ROOT
+from core_engine import _APP_ROOT
 
 
 class ModelHubWindow(ctk.CTkToplevel):

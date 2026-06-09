@@ -6,8 +6,8 @@ from datetime import datetime
 import customtkinter as ctk
 
 from ui_constants import (
-    SIDEBAR_BG, BG_MAIN, AI_BG, ACCENT, ACCENT_DIM, ACCENT_HOV,
-    TEXT_PRI, TEXT_SEC, TEXT_OK,
+    SIDEBAR_BG, ACCENT, ACCENT_DIM,
+    TEXT_PRI, TEXT_SEC,
     BORDER, DIVIDER, BTN_IDLE, BTN_HOV, BTN_BORDER,
     SIDEBAR_W, FONT_BADGE, FONT_SMALL, FONT_MICRO,
     _font, _F_UI,

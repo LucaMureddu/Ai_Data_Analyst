@@ -16,7 +16,6 @@ Uso:
 Durata stimata: 2-5 minuti (dipende dalla velocità del disco).
 """
 
-import os
 import sys
 import shutil
 import subprocess

@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from ui_constants import (
     BG_MAIN, INPUT_BG, BORDER, ACCENT, ACCENT_HOV, ACCENT_DIM,
-    TEXT_PRI, TEXT_SEC, FONT_CHAT, WIN_W, WIN_H,
+    TEXT_PRI, TEXT_SEC, FONT_CHAT,
     _font,
 )
 

@@ -14,7 +14,7 @@ import platform
 import re
 import sys
 import threading
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable
 
 from llama_cpp import Llama

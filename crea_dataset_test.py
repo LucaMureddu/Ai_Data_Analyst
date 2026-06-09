@@ -2,7 +2,10 @@
 Genera dati_test.csv — dataset fittizio per testare Data-Whisperer.
 Contiene: Data, Sede, Prodotto, Fatturato, Quantita, Costo, Margine
 """
-import csv, random, datetime, os
+import csv
+import datetime
+import os
+import random
 
 random.seed(42)
 sedi     = ["Milano", "Roma", "Napoli", "Torino", "Bologna"]

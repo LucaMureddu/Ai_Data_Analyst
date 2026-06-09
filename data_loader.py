@@ -22,10 +22,9 @@ Zero chiamate di rete.
 from __future__ import annotations
 
 import csv
-import io
 import os
 import warnings
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import pandas as pd
 
@@ -305,7 +304,7 @@ def lista_fogli_excel(percorso: str) -> list[str]:
     return list(xl.sheet_names)
 
 
-def carica_file(percorso: str, nome_foglio: Optional[str] = None) -> DatasetCaricato:
+def carica_file(percorso: str, nome_foglio: str | None = None) -> DatasetCaricato:
     """
     Punto di ingresso universale: rileva automaticamente il formato
     (CSV o Excel) ed esegue il caricamento appropriato.
@@ -362,7 +361,7 @@ if __name__ == "__main__":
         print(f"✔ Righe      : {dataset.n_righe}")
         print(f"✔ Colonne    : {dataset.n_colonne}")
         print(f"✔ Rimossi    : {dataset.colonne_rimosse}")
-        print(f"\n── Schema prompt ────────────────────────────────────")
+        print("\n── Schema prompt ────────────────────────────────────")
         print(dataset.schema_prompt)
     else:
         dataset = carica_file(sys.argv[1])

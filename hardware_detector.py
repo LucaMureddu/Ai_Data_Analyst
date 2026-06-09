@@ -15,7 +15,6 @@ Zero chiamate di rete. Zero dipendenze esterne oltre psutil.
 from __future__ import annotations
 
 import platform
-import struct
 import subprocess
 import sys
 from dataclasses import dataclass

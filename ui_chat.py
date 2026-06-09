@@ -10,7 +10,7 @@ from PIL import Image
 from ui_constants import (
     AI_BG, CODE_BG, USER_BG, BG_MAIN,
     ACCENT, ACCENT_HOV, ACCENT_SIDE, ACCENT_DIM,
-    ERR_BAR, BORDER, BTN_IDLE, BTN_HOV, BTN_BORDER,
+    ERR_BAR, BORDER, BTN_IDLE, BTN_HOV,
     TEXT_PRI, TEXT_SEC, TEXT_ERR, TEXT_CODE,
     FONT_CHAT, FONT_BADGE, FONT_MICRO, FONT_MONO,
     BUBBLE_MAX, WRAP_CODE,
@@ -317,7 +317,6 @@ class ChatMixin:
         self._scroll_bottom()
 
     def _msg_anteprima_dataset(self, df):
-        import pandas as pd
         MAX_COLS = 7
         MAX_ROWS = 5
 
@@ -479,7 +478,7 @@ class ChatMixin:
         import traceback as _tb
         try:
             def _cb(frac: float, label: str):
-                self.after(0, lambda f=frac, l=label: self._aggiorna_elaborazione(f, l))
+                self.after(0, lambda f=frac, lbl=label: self._aggiorna_elaborazione(f, lbl))
 
             risultato_ma = elabora_query_multi_agente(
                 self._llm,

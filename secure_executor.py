@@ -456,7 +456,7 @@ def esegui_sicuro(
 # =============================================================================
 
 if __name__ == "__main__":
-    import numpy as np
+    import numpy as np  # noqa: F401
 
     df_test = pd.DataFrame({
         "Mese":      ["Gen", "Feb", "Mar", "Apr"],

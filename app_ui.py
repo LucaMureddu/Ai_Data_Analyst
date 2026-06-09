@@ -11,7 +11,7 @@ from tkinter import filedialog
 
 from hardware_detector import rileva_hardware
 from data_loader       import carica_file, DatasetCaricato, lista_fogli_excel
-from core_engine       import carica_modello, trova_modelli, _APP_ROOT, _app_data_dir, ERRORE_ANNULLATO
+from core_engine       import carica_modello, trova_modelli, _APP_ROOT, _app_data_dir
 
 _DND_AVAILABLE = False
 try:
