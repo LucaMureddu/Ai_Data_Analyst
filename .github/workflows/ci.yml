@@ -41,8 +41,4 @@ jobs:
           ruff check .
 
       - name: Run tests
-        run: |
-          pytest tests/ -v --tb=short \
-            --cov=. \
-            --cov-omit="venv/*,tests/*,build_script.py,Data-Whisperer.spec" \
-            --cov-report=term-missing
+        run: pytest

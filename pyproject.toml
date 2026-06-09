@@ -22,3 +22,13 @@ known-first-party = [
     "ui_sidebar",
     "ui_widgets",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--cov=.",
+    "--cov-omit=venv/*,tests/*,build_script.py,Data-Whisperer.spec",
+    "--cov-report=term-missing",
+]
