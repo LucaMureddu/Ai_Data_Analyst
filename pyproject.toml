@@ -25,10 +25,7 @@ known-first-party = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = [
-    "-v",
-    "--tb=short",
-    "--cov=.",
-    "--cov-omit=venv/*,tests/*,build_script.py,Data-Whisperer.spec",
-    "--cov-report=term-missing",
-]
+addopts = ["-v", "--tb=short"]
+
+[tool.coverage.run]
+omit = ["venv/*", "tests/*", "build_script.py", "Data-Whisperer.spec"]
