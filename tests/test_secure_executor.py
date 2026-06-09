@@ -9,7 +9,7 @@ Nessuna dipendenza da llama_cpp o da un modello GGUF.
 import pandas as pd
 import pytest
 
-from secure_executor import esegui_sicuro, RisultatoEsecuzione, _analisi_ast
+from secure_executor import esegui_sicuro, _analisi_ast
 
 
 # ---------------------------------------------------------------------------

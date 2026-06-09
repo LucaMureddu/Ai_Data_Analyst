@@ -38,7 +38,7 @@ jobs:
 
       - name: Lint (ruff)
         run: |
-          ruff check . --select E,F,W,I --ignore E501 --exclude venv,build,dist
+          ruff check .
 
       - name: Run tests
         run: |

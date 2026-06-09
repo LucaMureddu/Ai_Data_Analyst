@@ -19,22 +19,21 @@ from typing import Callable
 
 from llama_cpp import Llama
 
-ERRORE_ANNULLATO = "__DW_ANNULLATO__"
-
-# ── Moduli interni Data-Whisperer ─────────────────────────────────────────────
-from dw_logger        import dw_logger
+from data_loader import carica_file, DatasetCaricato
+from dw_logger import dw_logger
 from hardware_detector import rileva_hardware
-from data_loader       import carica_file, DatasetCaricato
-from secure_executor   import esegui_sicuro, RisultatoEsecuzione
 from prompts import (
+    PROMPT_CONCIERGE,
+    PROMPT_STILISTA,
     PROMPT_VIGILE,
-    SP_VALIDATORE,
     SP_ARCHITETTO,
     SP_DATTILOGRAFO,
     SP_ISPETTORE,
-    PROMPT_STILISTA,
-    PROMPT_CONCIERGE,
+    SP_VALIDATORE,
 )
+from secure_executor import esegui_sicuro, RisultatoEsecuzione
+
+ERRORE_ANNULLATO = "__DW_ANNULLATO__"
 
 # =============================================================================
 # CONFIGURAZIONE — path compatibile con app nativa PyInstaller

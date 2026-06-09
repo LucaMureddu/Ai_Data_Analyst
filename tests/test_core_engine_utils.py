@@ -8,13 +8,10 @@ Copre: _pulisci_codice, trova_modelli, _app_data_dir.
 llama_cpp è mockato in conftest.py.
 """
 import os
-import sys
 import tempfile
 
 import pytest
 
-# conftest.py ha già mockato llama_cpp — possiamo importare core_engine
-import core_engine
 from core_engine import _pulisci_codice, trova_modelli, _app_data_dir
 
 

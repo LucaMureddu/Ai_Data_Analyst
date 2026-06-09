@@ -1,0 +1,24 @@
+[tool.ruff]
+line-length = 120
+exclude = ["venv", "build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501", "E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "core_engine",
+    "data_loader",
+    "dw_logger",
+    "hardware_detector",
+    "prompts",
+    "secure_executor",
+    "ui_chat",
+    "ui_constants",
+    "ui_hub",
+    "ui_layout",
+    "ui_onboarding",
+    "ui_sidebar",
+    "ui_widgets",
+]
