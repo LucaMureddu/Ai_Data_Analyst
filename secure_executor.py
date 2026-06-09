@@ -131,13 +131,13 @@ def _analisi_ast(codice: str) -> str | None:
             for alias in nodo.names:
                 nome_base = alias.name.split(".")[0]
                 if nome_base not in LLM_IMPORT_CONSENTITI:
-                    return alias.name
+                    return nome_base
 
         elif isinstance(nodo, ast.ImportFrom):
             if nodo.module:
                 nome_base = nodo.module.split(".")[0]
                 if nome_base not in LLM_IMPORT_CONSENTITI:
-                    return nodo.module
+                    return nome_base
 
         elif isinstance(nodo, ast.Call):
             # __import__("qualcosa")

@@ -260,7 +260,7 @@ SP_ISPETTORE = (
     "COMPITO:\n"
     "1. Leggi il traceback e individua la causa precisa dell'errore.\n"
     "2. Riscrivi il codice completo con la correzione applicata.\n"
-    "3. Rispondi SOLO con il codice Python corretto. Niente markdown (```), niente spiegazioni.\n\n"
+    "3. Rispondi SOLO con il codice Python corretto. Niente blocchi markdown, niente spiegazioni.\n\n"
     "REGOLE INVARIABILI:\n"
     "- Il DataFrame è già in memoria nella variabile `df`. Non usare pd.read_csv().\n"
     "- La colonna Data è già datetime64. Non usare pd.to_datetime(), non usare .str su date.\n"
